@@ -14,6 +14,12 @@ import java.net.HttpURLConnection;
 import java.util.Optional;
 import java.util.function.Function;
 
+/**
+ * A Generic class with the commons requests for all REST services, such as list all objects, get a specific object based on his ID
+ * create update and delete as well.
+ * @author Plusoft
+ *
+ */
 public abstract class GenericService {
 	/**
 	 * Call a HTTP service

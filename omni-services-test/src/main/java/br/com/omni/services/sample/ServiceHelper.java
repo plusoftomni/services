@@ -21,6 +21,12 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
 
+/**
+ * Knows the URL of your REST service to call? Get the HttpUrlConnection? 
+ * Receive and send Json, or, encode a string? This is the class.
+ * @author Plusoft
+ *
+ */
 public class ServiceHelper {
 	private static Properties properties;
 	private static String serviceUrl;
@@ -63,7 +69,12 @@ public class ServiceHelper {
 			con.setDoOutput(true);
 			con.setRequestProperty("Accept", "application/json");
 			
-			String userPassword = properties.getProperty("config.username") + ":" + properties.getProperty("config.password");
+			String username = properties.getProperty("config.username");
+			String password = properties.getProperty("config.password");
+			if (username.equals("") || password.equals(""))
+				throw new RuntimeException("Please set your username/password in config.properties");
+			
+			String userPassword = username + ":" + password;
 			String encoding = Base64.getEncoder().encodeToString(userPassword.getBytes());
 			
 			con.setRequestProperty("Authorization", "Basic " + encoding);
