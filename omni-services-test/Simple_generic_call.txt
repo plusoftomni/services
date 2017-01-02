@@ -1,0 +1,32 @@
+This note shows a simple way to call any REST service using Java with a simple POJO.
+Make a call, send a JSON object, read a JSON object received, all is right down here.
+
+[code]
+ //import java.net.*;
+ //import javax.json.*;
+ 
+ //Making call
+ URL url = new URL("{url}");
+ HttpURLConnection con = (HttpURLConnection) url.openConnection();
+ con.setRequestMethod("GET/POST/PUT/...");
+ con.setDoOutput(true);
+ con.setDoInput(true);
+ con.setRequestProperty("Content-Type", "application/json");
+
+ //Looking for a Basic Authentication? Its commented in the next three lines
+ //String userAndPassword = "{user}" + ":" + "{pass}";
+ //String encoding = Base64.getEncoder().encodeToString(userAndPassword.getBytes());
+ //con.setRequestProperty("Authorization", "Basic " + encoding);
+		  
+ //Sending JSON
+ OutputStreamWriter out= new OutputStreamWriter(con.getOutputStream());
+ out.write("{id: 1, name: 'Khtry'}");
+ out.flush();
+
+ //Receiving JSON
+ BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+ JsonReader jReader = Json.createReader(in);
+ System.out.println( jReader.readObject() );
+[/code]
+ 
+ 
