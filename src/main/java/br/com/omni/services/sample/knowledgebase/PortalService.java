@@ -4,10 +4,6 @@ import static br.com.omni.services.sample.RequestMethod.GET;
 import static br.com.omni.services.sample.ServiceHelper.encode;
 import static br.com.omni.services.sample.ServiceHelper.getUrl;
 import static br.com.omni.services.sample.ServiceHelper.receiveAndShowJsonArray;
-
-import java.net.HttpURLConnection;
-import java.util.function.Function;
-
 import br.com.omni.services.sample.Functionality;
 import br.com.omni.services.sample.GenericService;
 
@@ -42,26 +38,16 @@ public class PortalService extends GenericService {
 		//System.out.println("\n\nUpdating");
 		//update(Optional.empty());
 
-		System.out.format("\n\nDeleting (%1$1s)\n",DELETE_ID);
-		delete(DELETE_ID);
+		//System.out.format("\n\nDeleting (%1$1s)\n",DELETE_ID);
+		//delete(DELETE_ID);
 	}
 
 	private static void request(String name) {
-		Function<HttpURLConnection, Void> func = con -> {
-			receiveAndShowJsonArray(con);
-			return null;
-		};
-		
-		httpCall(String.format("%1$1s?portal=%2$1s",getUrl(),encode(name)), GET, func);
+		httpCall(String.format("%1$1s?portal=%2$1s",getUrl(),encode(name)), GET, con -> receiveAndShowJsonArray(con));
 	}
 
 	private static void request(boolean inactive) {
-		Function<HttpURLConnection, Void> func = con -> {
-			receiveAndShowJsonArray(con);
-			return null;
-		};
-		
-		httpCall(String.format("%1$1s?inactive=%2$1s",getUrl(),(inactive?"Y":"N")), GET, func);
+		httpCall(String.format("%1$1s?inactive=%2$1s",getUrl(),(inactive?"Y":"N")), GET, con -> receiveAndShowJsonArray(con));
 	}
 
 }
