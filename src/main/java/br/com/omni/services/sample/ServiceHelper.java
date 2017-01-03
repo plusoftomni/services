@@ -127,7 +127,7 @@ public class ServiceHelper {
 			
 			out.flush();
 			
-			System.out.println("sent: "+content.replaceAll("\n", "").replaceAll("\t", "").replaceAll("\r", ""));
+			System.out.println("sent: "+content.replaceAll("(\n|\t|\r)", ""));
 		} catch (Exception e) {
 			throw new RuntimeException(e); 
 		}
