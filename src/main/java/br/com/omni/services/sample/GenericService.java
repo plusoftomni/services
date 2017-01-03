@@ -1,12 +1,12 @@
 package br.com.omni.services.sample;
 
+import static br.com.omni.services.sample.RequestMethod.DELETE;
 import static br.com.omni.services.sample.RequestMethod.GET;
 import static br.com.omni.services.sample.RequestMethod.POST;
 import static br.com.omni.services.sample.RequestMethod.PUT;
 import static br.com.omni.services.sample.ServiceHelper.getConn;
 import static br.com.omni.services.sample.ServiceHelper.getUrl;
 import static br.com.omni.services.sample.ServiceHelper.isSucess;
-import static br.com.omni.services.sample.ServiceHelper.receiveAndShowJsonArray;
 import static br.com.omni.services.sample.ServiceHelper.sendJson;
 
 import java.net.HttpURLConnection;
@@ -20,26 +20,6 @@ import java.util.function.Consumer;
  *
  */
 public abstract class GenericService {
-	/**
-	 * Call a HTTP service
-	 * 
-	 * @param complement - REST URL to call
-	 * @param requestMethod - Which HTTP METHOD shoud be used
-	 * @param postCall - Function to be executed after the call
-	 */
-	protected static void httpCall(final String complement, RequestMethod requestMethod) {
-		httpCall(complement, requestMethod, Optional.empty(), Optional.empty());
-	}
-	/**
-	 * Call a HTTP and having as response code SUCCESS, invoke the post call function
-	 * 
-	 * @param complement - REST URL to call
-	 * @param requestMethod - Which HTTP METHOD shoud be used
-	 * @param postCall - Function to be executed after the call
-	 */
-	protected static void httpCall(final String complement, RequestMethod requestMethod, Consumer<HttpURLConnection> postCall) {
-		httpCall(complement, requestMethod, Optional.empty(), Optional.of(postCall));
-	}
 	/**
 	 * Call a HTTP and execute (if present) the pre function, this may be used to send values to your requisition 
 	 * and having as response code SUCCESS, invoke the post call function
@@ -62,7 +42,7 @@ public abstract class GenericService {
 	 * Invokes the specific service in listing all
 	 */
 	protected static void requestAll() {
-		httpCall("", GET, con -> receiveAndShowJsonArray(con));
+		httpCall("", GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 	/**
@@ -70,7 +50,7 @@ public abstract class GenericService {
 	 * @param id - Object to get
 	 */
 	protected static void request(int id) {
-		httpCall(String.format("/%1$1s",id), GET, ServiceHelper::receiveAndShowJsonObject);
+		httpCall(String.format("/%1$1s",id), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonObject));
 	}
 
 	/**
@@ -79,7 +59,7 @@ public abstract class GenericService {
 	 * @param limit - How many registers
 	 */
 	protected static void request(int offset, int limit) {
-		httpCall(String.format("?offset=%1$1s&limit=%2$1s",offset,limit).toString(), GET, ServiceHelper::receiveAndShowJsonArray);
+		httpCall(String.format("?offset=%1$1s&limit=%2$1s",offset,limit).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 	/**
@@ -101,6 +81,6 @@ public abstract class GenericService {
 	 * Invokes the specific service to delete an existing register
 	 */
 	protected static void delete(int id) {
-		httpCall(String.format("/%1$1s",id), RequestMethod.DELETE);
+		httpCall(String.format("/%1$1s",id), DELETE, Optional.empty(), Optional.empty());
 	}
 }

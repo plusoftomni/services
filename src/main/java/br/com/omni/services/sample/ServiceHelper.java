@@ -19,7 +19,6 @@ import java.util.Properties;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonReader;
 
 /**
  * Knows the URL of your REST service to call? Get the HttpUrlConnection? 
@@ -39,13 +38,15 @@ public class ServiceHelper {
 	 */
 	public static String getUrl() {
 		if (properties == null) {
-			properties = new Properties();
-			try {
-				properties.load(new FileInputStream("src/main/java/config.properties"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+			synchronized (Properties.class) {
+				properties = new Properties();
+				try {
+					properties.load(new FileInputStream("src/main/java/config.properties"));
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				serviceUrl = properties.getProperty("service.url");
 			}
-			serviceUrl = properties.getProperty("service.url");
 		}
 		return MessageFormat.format(properties.getProperty("service.".concat(getFunctionality())),serviceUrl);
 	}
@@ -118,14 +119,10 @@ public class ServiceHelper {
 	 */
 	public static void sendJson(final HttpURLConnection con, Optional<String> extension) {
 		String file = getFunctionality().concat(extension.orElse(""));
-		OutputStreamWriter out;
-		try {
-			out= new OutputStreamWriter(con.getOutputStream());
+		try (OutputStreamWriter out = new OutputStreamWriter(con.getOutputStream())) {
 		
 			String content = new String(Files.readAllBytes(Paths.get("src/resources/"+file+".json")));
 			out.write(content);
-			
-			out.flush();
 			
 			System.out.println("sent: "+content.replaceAll("(\n|\t|\r)", ""));
 		} catch (Exception e) {
@@ -140,16 +137,11 @@ public class ServiceHelper {
 	 * @return JSON object
 	 */
 	public static JsonObject receiveJsonObject(final HttpURLConnection con) {
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+			return Json.createReader(in).readObject();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		JsonReader rdr = Json.createReader(in);
-		
-		return rdr.readObject();
 	}
 
 	/**
@@ -170,16 +162,11 @@ public class ServiceHelper {
 	 * @return JSON array
 	 */
 	public static JsonArray receiveJsonArray(final HttpURLConnection con) {
-		BufferedReader in = null;
-		try {
-			in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+			return Json.createReader(in).readArray();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		JsonReader rdr = Json.createReader(in);
-		
-		return rdr.readArray();
 	}
 
 	/**

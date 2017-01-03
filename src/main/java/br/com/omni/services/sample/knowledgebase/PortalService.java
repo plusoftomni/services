@@ -45,11 +45,11 @@ public class PortalService extends GenericService {
 	}
 
 	private static void request(String name) {
-		httpCall(String.format("?portal=%1$1s",encode(name)), GET, ServiceHelper::receiveAndShowJsonArray);
+		httpCall(String.format("?portal=%1$1s",encode(name)), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 	private static void request(boolean inactive) {
-		httpCall(String.format("?inactive=%1$1s",(inactive?"Y":"N")), GET, ServiceHelper::receiveAndShowJsonArray);
+		httpCall(String.format("?inactive=%1$1s",(inactive?"Y":"N")), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 }
