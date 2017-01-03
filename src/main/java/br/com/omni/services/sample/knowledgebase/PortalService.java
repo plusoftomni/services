@@ -2,10 +2,9 @@ package br.com.omni.services.sample.knowledgebase;
 
 import static br.com.omni.services.sample.RequestMethod.GET;
 import static br.com.omni.services.sample.ServiceHelper.encode;
-import static br.com.omni.services.sample.ServiceHelper.getUrl;
-import static br.com.omni.services.sample.ServiceHelper.receiveAndShowJsonArray;
 import br.com.omni.services.sample.Functionality;
 import br.com.omni.services.sample.GenericService;
+import br.com.omni.services.sample.ServiceHelper;
 
 @Functionality("portal")
 public class PortalService extends GenericService {
@@ -43,11 +42,11 @@ public class PortalService extends GenericService {
 	}
 
 	private static void request(String name) {
-		httpCall(String.format("%1$1s?portal=%2$1s",getUrl(),encode(name)), GET, con -> receiveAndShowJsonArray(con));
+		httpCall(String.format("?portal=%1$1s",encode(name)), GET, ServiceHelper::receiveAndShowJsonArray);
 	}
 
 	private static void request(boolean inactive) {
-		httpCall(String.format("%1$1s?inactive=%2$1s",getUrl(),(inactive?"Y":"N")), GET, con -> receiveAndShowJsonArray(con));
+		httpCall(String.format("?inactive=%1$1s",(inactive?"Y":"N")), GET, ServiceHelper::receiveAndShowJsonArray);
 	}
 
 }

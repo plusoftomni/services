@@ -2,10 +2,9 @@ package br.com.omni.services.sample.user;
 
 import static br.com.omni.services.sample.RequestMethod.GET;
 import static br.com.omni.services.sample.ServiceHelper.encode;
-import static br.com.omni.services.sample.ServiceHelper.getUrl;
-import static br.com.omni.services.sample.ServiceHelper.receiveAndShowJsonArray;
 import br.com.omni.services.sample.Functionality;
 import br.com.omni.services.sample.GenericService;
+import br.com.omni.services.sample.ServiceHelper;
 
 @Functionality("team")
 public class TeamService extends GenericService {
@@ -36,11 +35,11 @@ public class TeamService extends GenericService {
 	}
 
 	private static void request(String name) {
-		httpCall(String.format("%1$1s?teamname=%2$1s",getUrl(),encode(name)), GET, con -> receiveAndShowJsonArray(con));
+		httpCall(String.format("?teamname=%1$1s",encode(name)), GET, ServiceHelper::receiveAndShowJsonArray);
 	}
 
 	private static void request(boolean inactive) {
-		httpCall(String.format("%1$1s?inactiverecord=%2$1s",getUrl(),(inactive?"Y":"N")), GET, con -> receiveAndShowJsonArray(con));
+		httpCall(String.format("?inactiverecord=%1$1s",(inactive?"Y":"N")), GET, ServiceHelper::receiveAndShowJsonArray);
 	}
 
 }
