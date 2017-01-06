@@ -1,13 +1,7 @@
 package br.com.omni.services.sample.user;
 
-import static br.com.omni.services.sample.RequestMethod.GET;
-import static br.com.omni.services.sample.ServiceHelper.encode;
-
-import java.util.Optional;
-
 import br.com.omni.services.sample.Functionality;
 import br.com.omni.services.sample.GenericService;
-import br.com.omni.services.sample.ServiceHelper;
 
 @Functionality("team")
 public class TeamService extends GenericService {
@@ -35,14 +29,6 @@ public class TeamService extends GenericService {
 		
 		//System.out.println("\n\nCreating a new");
 		//create();
-	}
-
-	private static void request(String name) {
-		httpCall(String.format("?teamname=%1$1s",encode(name)), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
-	}
-
-	private static void request(boolean inactive) {
-		httpCall(String.format("?inactiverecord=%1$1s",(inactive?"Y":"N")), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 }

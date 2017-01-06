@@ -5,6 +5,7 @@ import static br.com.omni.services.sample.RequestMethod.GET;
 import static br.com.omni.services.sample.RequestMethod.POST;
 import static br.com.omni.services.sample.RequestMethod.PUT;
 import static br.com.omni.services.sample.ServiceHelper.getConn;
+import static br.com.omni.services.sample.ServiceHelper.getFunctionalityPropertie;
 import static br.com.omni.services.sample.ServiceHelper.getUrl;
 import static br.com.omni.services.sample.ServiceHelper.isSucess;
 import static br.com.omni.services.sample.ServiceHelper.sendJson;
@@ -60,6 +61,22 @@ public abstract class GenericService {
 	 */
 	protected static void request(int offset, int limit) {
 		httpCall(String.format("?offset=%1$1s&limit=%2$1s",offset,limit).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
+	}
+
+	/**
+	 * Invokes the specific service to get the especific object based on his name
+	 * @param name - Value to be find  
+	 */
+	protected static void request(String name) {
+		httpCall(String.format("?%1$1s=%2$1s",getFunctionalityPropertie("field.name"),name).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonObject));
+	}
+
+	/**
+	 * Invokes the specific service to get all active/inactive objects.
+	 * @param name - Value to be find  
+	 */
+	protected static void request(boolean inactive) {
+		httpCall(String.format("?inactiverecord=%1$1s",(inactive?"Y":"N")).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
 	}
 
 	/**

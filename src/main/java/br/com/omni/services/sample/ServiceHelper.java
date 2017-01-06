@@ -30,6 +30,15 @@ public class ServiceHelper {
 	private static Properties properties;
 	private static String serviceUrl;
 	
+	static {
+		properties = new Properties();
+		try {
+			properties.load(new FileInputStream("src/main/java/config.properties"));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	/**
 	 * Return the URL of the service to be called (determined by Functionality annotation)
 	 * 
@@ -37,18 +46,10 @@ public class ServiceHelper {
 	 * @return - URL to be called
 	 */
 	public static String getUrl() {
-		if (properties == null) {
-			synchronized (Properties.class) {
-				properties = new Properties();
-				try {
-					properties.load(new FileInputStream("src/main/java/config.properties"));
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				serviceUrl = properties.getProperty("service.url");
-			}
+		if (serviceUrl == null) {
+			serviceUrl = properties.getProperty("service.api");
 		}
-		return MessageFormat.format(properties.getProperty("service.".concat(getFunctionality())),serviceUrl);
+		return MessageFormat.format(getFunctionalityPropertie("url"),serviceUrl);
 	}
 	
 	/**
@@ -72,7 +73,7 @@ public class ServiceHelper {
 			
 			String username = properties.getProperty("config.username");
 			String password = properties.getProperty("config.password");
-			if (username.equals("") || password.equals(""))
+			if ((username == null || username.equals("")) || (password == null || password.equals("")))
 				throw new RuntimeException("Please set your username/password in config.properties");
 			
 			String userPassword = username + ":" + password;
@@ -216,4 +217,7 @@ public class ServiceHelper {
 		return functionality;
 	}
 	
+	public static String getFunctionalityPropertie(String name) {
+		return properties.getProperty("service.".concat(getFunctionality()).concat(".").concat(name));
+	}
 }
