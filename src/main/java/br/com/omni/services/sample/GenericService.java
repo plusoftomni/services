@@ -30,7 +30,7 @@ public abstract class GenericService {
 	 * @param preCall - Function to be executed before the call
 	 * @param postCall - Function to be executed after the call
 	 */
-	protected static void httpCall(final String complement, RequestMethod requestMethod, Optional<Consumer<HttpURLConnection>> preCall, Optional<Consumer<HttpURLConnection>> postCall) {
+	protected void httpCall(final String complement, RequestMethod requestMethod, Optional<Consumer<HttpURLConnection>> preCall, Optional<Consumer<HttpURLConnection>> postCall) {
 		HttpURLConnection con = getConn(getUrl().concat(complement), requestMethod);
 		
 		if (preCall.isPresent()) preCall.get().accept(con);
@@ -42,16 +42,16 @@ public abstract class GenericService {
 	/**
 	 * Invokes the specific service in listing all
 	 */
-	protected static void requestAll() {
-		httpCall("", GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
+	protected void requestAll() {
+		httpCall("", GET, Optional.empty(), Optional.of(ServiceHelper::receiveJsonArray));
 	}
 
 	/**
 	 * Invokes the specific service in get a specific object
 	 * @param id - Object to get
 	 */
-	protected static void request(int id) {
-		httpCall(String.format("/%1$1s",id), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonObject));
+	protected void request(int id) {
+		httpCall(String.format("/%1$1s",id), GET, Optional.empty(), Optional.of(ServiceHelper::receiveJsonObject));
 	}
 
 	/**
@@ -59,45 +59,45 @@ public abstract class GenericService {
 	 * @param offset - Initial register  
 	 * @param limit - How many registers
 	 */
-	protected static void request(int offset, int limit) {
-		httpCall(String.format("?offset=%1$1s&limit=%2$1s",offset,limit).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
+	protected void request(int offset, int limit) {
+		httpCall(String.format("?offset=%1$1s&limit=%2$1s",offset,limit).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveJsonArray));
 	}
 
 	/**
 	 * Invokes the specific service to get the especific object based on his name
 	 * @param name - Value to be find  
 	 */
-	protected static void request(String name) {
-		httpCall(String.format("?%1$1s=%2$1s",getFunctionalityPropertie("field.name"),name).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonObject));
+	protected void request(String name) {
+		httpCall(String.format("?%1$1s=%2$1s",getFunctionalityPropertie("field.name"),name).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveJsonObject));
 	}
 
 	/**
 	 * Invokes the specific service to get all active/inactive objects.
 	 * @param name - Value to be find  
 	 */
-	protected static void request(boolean inactive) {
-		httpCall(String.format("?inactiverecord=%1$1s",(inactive?"Y":"N")).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveAndShowJsonArray));
+	protected void request(boolean inactive) {
+		httpCall(String.format("?inactiverecord=%1$1s",(inactive?"Y":"N")).toString(), GET, Optional.empty(), Optional.of(ServiceHelper::receiveJsonArray));
 	}
 
 	/**
 	 * Invokes the specific service to create
 	 */
-	protected static void create() {
-		httpCall("", POST, Optional.of(con -> sendJson(con, Optional.empty())), Optional.of(ServiceHelper::receiveAndShowJsonObject));
+	protected void create() {
+		httpCall("", POST, Optional.of(con -> sendJson(con, Optional.empty())), Optional.of(ServiceHelper::receiveJsonObject));
 	}
 
 	/**
 	 * Invokes the specific service in update an existing register
 	 * @param method - Method to be used (compatibility with services which use POST/PUT methods)
 	 */
-	protected static void update(Optional<RequestMethod> method) {
-		httpCall("", method.orElse(PUT), Optional.of(con -> sendJson(con, Optional.of("_update"))), Optional.of(ServiceHelper::receiveAndShowJsonObject));
+	protected void update(Optional<RequestMethod> method) {
+		httpCall("", method.orElse(PUT), Optional.of(con -> sendJson(con, Optional.of("_update"))), Optional.of(ServiceHelper::receiveJsonObject));
 	}
 
 	/**
 	 * Invokes the specific service to delete an existing register
 	 */
-	protected static void delete(int id) {
+	protected void delete(int id) {
 		httpCall(String.format("/%1$1s",id), DELETE, Optional.empty(), Optional.empty());
 	}
 }

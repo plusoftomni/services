@@ -9,26 +9,28 @@ public class TeamService extends GenericService {
 	private static final String FIND_NAME = "Time de Retenção 2";
 
 	public static void main(String[] args) {
+		TeamService service = new TeamService();
+		
 		System.out.println("Requesting all");
-		requestAll();
+		service.requestAll();
 		
 		System.out.format("\n\nRequesting by ID (%1$1s)\n",FIND_ID);
-		request(FIND_ID);
+		service.request(FIND_ID);
 
 		System.out.format("\n\nRequesting by Name (%1$1s)\n",FIND_NAME);
-		request(FIND_NAME);
+		service.request(FIND_NAME);
 
 		System.out.println("\n\nRequesting 2 of 3");
-		request(1,2);
+		service.request(2,2);
 
 		System.out.println("\n\nRequesting all active");
-		request(false);
+		service.request(false);
 
 		System.out.println("\n\nRequesting all inactive");
-		request(true);
+		service.request(true);
 		
 		//System.out.println("\n\nCreating a new");
-		//create();
+		//service.create();
 	}
 
 }
