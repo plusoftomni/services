@@ -139,21 +139,14 @@ public class ServiceHelper {
 	 */
 	public static JsonObject receiveJsonObject(final HttpURLConnection con) {
 		try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-			return Json.createReader(in).readObject();
+			JsonObject jsonObject = Json.createReader(in).readObject();
+
+			System.out.println("received: "+jsonObject);
+			
+			return jsonObject;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Read the JSON received and log
-	 * 
-	 * @param con - Connection
-	 */
-	public static void receiveAndShowJsonObject(final HttpURLConnection con) {
-		JsonObject jObj = receiveJsonObject(con);
-		
-		System.out.println("received: "+jObj);
 	}
 
 	/**
@@ -164,21 +157,14 @@ public class ServiceHelper {
 	 */
 	public static JsonArray receiveJsonArray(final HttpURLConnection con) {
 		try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-			return Json.createReader(in).readArray();
+			JsonArray jsonArray = Json.createReader(in).readArray();
+			
+			jsonArray.forEach(j->System.out.println("received: "+j));
+			
+			return jsonArray;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Read the JSON received and log
-	 * 
-	 * @param con - Connection
-	 */
-	public static void receiveAndShowJsonArray(final HttpURLConnection con) {
-		JsonArray jArray = receiveJsonArray(con);
-		
-		jArray.forEach(j->System.out.println("received: "+j));
 	}
 
 	/**
@@ -217,6 +203,11 @@ public class ServiceHelper {
 		return functionality;
 	}
 	
+	/**
+	 * Read a specific propertie of your functionality
+	 * @param name Name of the field to get
+	 * @return value defined to this propertie
+	 */
 	public static String getFunctionalityPropertie(String name) {
 		return properties.getProperty("service.".concat(getFunctionality()).concat(".").concat(name));
 	}
